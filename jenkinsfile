@@ -1,13 +1,9 @@
 pipeline {
     agent any
 	
-    environment {
+	environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-    }
-
-    parameters {
-        string(name: 'action', defaultValue: 'plan', description: 'Terraform action to execute (e.g., apply, destroy)')
     }
 
     stages {
@@ -18,7 +14,8 @@ pipeline {
                     $class: 'GitSCM',
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[
-                        url: 'https://github.com/setor2211/Jenkins.git',                        
+                        url:'https://github.com/setor2211/Jenkins.git',
+                        
                     ]]
                 ])
             }
@@ -29,10 +26,10 @@ pipeline {
                 sh 'terraform init'
             }
         }
-        stage("Terraform Action") {
+        stage ("terraform Action") {
             steps {
-                echo "Terraform action is --> ${params.action}"
-                sh "terraform ${params.action} -auto-approve"
+                echo "Terraform action is --> ${action}"
+                sh ('terraform ${action} -auto-approve') 
             }
         }
     }
