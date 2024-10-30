@@ -4,11 +4,8 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        action = 'apply' // Define the default action or make it a parameter if dynamic
     }
 
-    parameters {
-        string(name: 'action', defaultValue: 'apply', description: 'Terraform action to perform (e.g., apply, destroy)')
     }
 
     stages {
@@ -32,9 +29,9 @@ pipeline {
         }
         stage("Terraform Action") {
             steps {
-                echo "Terraform action is --> ${params.action}"
-                sh "terraform ${params.action} -auto-approve"
+                echo "Terraform action is --> ${action}"
+                sh "terraform ${action} -auto-approve"
             }
         }
     }
-}
+
